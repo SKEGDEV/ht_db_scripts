@@ -94,6 +94,12 @@ create table classroom(
   classroom_statusId int not null
 );
 
+create table classroom_list(
+  Clist_id int primary key auto_increment,
+  Clist_classroomId int not null,
+  Clist_listId int not null
+);
+
 create table classroom_type(
   type_id int primary key auto_increment,
   classroom_type varchar(30) not null
@@ -104,15 +110,17 @@ insert into classroom_type values (default, 'unidad'), (default, 'semestre'), (d
 create table classroom_student(
   Cstudent_id int primary key auto_increment,
   Cstudent_studentId int not null,
-  Cstudent_classroomId int not null,
+  Cstudent_ClistId int not null,
+  Cstudent_unit_number int not null,
   Cstudent_qualification float not null
 );
 
 create table activity_class(
   activity_id int primary key auto_increment,
   activity_name varchar(100) not null,
+  activity_date date not null,
   activity_qualification float not null,
-  activity_classroomId int not null
+  activity_ClistId int not null
 );
 
 create table activity_student(
@@ -140,11 +148,14 @@ alter table student add constraint fk_student_status foreign key (student_status
 alter table classroom add constraint fk_classroom_type foreign key (classroom_typeId) references classroom_type(type_id);
 alter table classroom add constraint fk_classroom_status foreign key (classroom_statusId) references status(status_id);
 alter table classroom add constraint fk_classroom_teacher foreign key (classroom_teacherId) references teacher(teacher_id);
+/*classroom list constraint*/
+alter table classroom_list add constraint fk_Clist_list foreign key (Clist_listId) references list(list_id);
+alter table classroom_list add constraint fk_Clist_classroom foreign key (Clist_classroomId) references classroom(classroom_id);
 /*classroom student constraint*/
 alter table classroom_student add constraint fk_Cstudent_student foreign key (Cstudent_studentId) references student(student_id);
-alter table classroom_student add constraint fk_Cstudent_classroom foreign key (Cstudent_classroomId) references classroom(classroom_id);
+alter table classroom_student add constraint fk_Cstudent_classroom foreign key (Cstudent_ClistId) references classroom_list(Clist_id);
 /*activity_class constraint*/
-alter table activity_class add constraint fk_activity_classroom foreign key (activity_classroomId) references classroom(classroom_id);
+alter table activity_class add constraint fk_activity_classroom foreign key (activity_ClistId) references classroom_list(Clist_id);
 /*activity_student constraint*/
 alter table activity_student add constraint fk_Sactivity_student foreign key (activity_studentId) references student(student_id);
 alter table activity_student add constraint fk_Sactivity_Cactivity foreign key (activity_classId) references activity_class(activity_id);

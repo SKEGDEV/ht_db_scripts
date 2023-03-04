@@ -9,3 +9,21 @@ begin
   where teacher_documentNumber = document_number
   limit 1;
 end$$
+
+delimiter $$
+create procedure sp_get_all_classroom(
+  in document_number varchar(100)
+)
+begin
+
+  select c_r.classroom_id, c_r.classroom_name as name, 
+  c_t.classroom_type as c_type, s.status,
+  c_l.list_name as list 
+  from classroom_list as c_l
+  inner join classroom as c_r on c_r.classroom_id = c_l.Clist_classroomId
+  inner join classroom_type as c_t on c_t.type_id = c_r.classroom_typeId
+  inner join status as s on s.status_id = c_r.classroom_statusId
+  inner join teacher as t on t.teacher_id = c_r.classroom_teacherId
+  where t.teacher_documentNumber = document_number;
+
+end$$
