@@ -120,8 +120,26 @@ create table activity_class(
   activity_name varchar(100) not null,
   activity_date date not null,
   activity_qualification float not null,
-  activity_ClistId int not null
+  activity_ClistId int not null,
+  activity_typeId int not null,
+  activity_subTypeId int not null
 );
+
+create table activity_type(
+  Atype_id int primary key auto_increment,
+  Atype_name varchar(50) not null
+);
+
+insert into activity_type values (default, 'declarativo'), (default, 'procedimental'),
+(default, 'actitudinal'), (default, 'otro');
+
+create table activity_subType(
+  ASType_id int primary key auto_increment,
+  ASType_name varchar(50)
+);
+
+insert into activity_subType values (default, 'tarea'), (default, 'corto'),
+(default, 'parcial'), (default, 'examen'), (default, 'otro');
 
 create table activity_student(
   activity_id int primary key auto_increment,
@@ -156,6 +174,8 @@ alter table classroom_student add constraint fk_Cstudent_student foreign key (Cs
 alter table classroom_student add constraint fk_Cstudent_classroom foreign key (Cstudent_ClistId) references classroom_list(Clist_id);
 /*activity_class constraint*/
 alter table activity_class add constraint fk_activity_classroom foreign key (activity_ClistId) references classroom_list(Clist_id);
+alter table activity_class add constraint fk_activity_type foreign key (activity_typeId) references activity_type(Atype_id);
+alter table activity_class add constraint fk_activity_subType foreign key (activity_subTypeId) references activity_subType(ASType_id);
 /*activity_student constraint*/
 alter table activity_student add constraint fk_Sactivity_student foreign key (activity_studentId) references student(student_id);
 alter table activity_student add constraint fk_Sactivity_Cactivity foreign key (activity_classId) references activity_class(activity_id);

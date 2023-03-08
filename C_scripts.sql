@@ -99,3 +99,12 @@ begin
   );
 end$$
 
+delimiter $$
+create prodedure sp_create_activity(
+  in name varchar(100),
+
+  
+)
+begin
+
+end$$
